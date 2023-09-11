@@ -22,9 +22,6 @@ summary(model)
 # Das Bestimmtheitsmaß R^2 beträgt 0.9118, ein hoher Wert. Das lineare Modell
 # kann 91.18% der Streuung um den y-Mittelwert erklären.
 
-# Da wir Hypothesentests bisher noch nicht bearbeitet haben, können wir diese
-# folgenden beiden Werte bis jetzt nur eingeschränkt interpretieren.
-
 # Die x-Variable ist signifikant (***) mit einem p-Wert von 2e-16,
 # d.h. mit großer Wahrscheinlichkeit nicht null.
 
