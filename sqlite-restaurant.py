@@ -15,20 +15,26 @@
 
 # %%
 import sqlite3
+import random
+import pandas as pd
 
 conn = sqlite3.connect("./restaurant.db")
 cur = conn.cursor()
 
-cur.execute(
-    """
-    DROP TABLE IF EXISTS meals
-"""
-)
+cur.execute("DROP TABLE IF EXISTS meals")
+cur.execute("DROP TABLE IF EXISTS orders")
 
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS meals
     (id INTEGER PRIMARY KEY, name TEXT, type TEXT, diet INTEGER, price INTEGER)
+"""
+)
+
+cur.execute(
+    """
+    CREATE TABLE IF NOT EXISTS orders
+    (id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, meal_id INTEGER)
 """
 )
 
@@ -60,11 +66,46 @@ meals = [
 ]
 
 cur.executemany(
-    """
-    INSERT INTO meals (name, type, diet, price) VALUES (?, ?, ?, ?)
-""",
+    "INSERT INTO meals (name, type, diet, price) VALUES (?, ?, ?, ?)",
     meals,
 )
+
+conn.commit()
+
+
+def get_random_meal(meal_type, conn):
+    df = pd.read_sql("SELECT * FROM meals", conn)
+    return random.choice(df.query(f"type == '{meal_type}'").id.tolist())
+
+
+def insert_meal(order_date, customer_id, meal_type, cur, conn):
+    meal_id = get_random_meal(meal_type, conn)
+    cur.execute(
+        """INSERT INTO orders (customer_id, meal_id, order_date) VALUES (?, ?, ?)""",
+        (customer_id, meal_id, order_date),
+    )
+
+
+n = 100
+min_n = 50
+sigma = 0.1 * n
+order_dates = (
+    pd.date_range("2024-02-01", "2024-02-29", freq="D").strftime("%Y-%m-%d").tolist()
+)
+customer_id = 0
+
+for order_date in order_dates:
+    m = max([min_n, int(random.normalvariate(mu=n, sigma=sigma))])
+
+    for i in range(m):
+        if random.random() > 0.5:
+            insert_meal(order_date, customer_id, "starter", cur, conn)
+        if random.random() > 0.9:
+            insert_meal(order_date, customer_id, "main", cur, conn)
+        if random.random() > 0.5:
+            insert_meal(order_date, customer_id, "dessert", cur, conn)
+
+        customer_id += 1
 
 conn.commit()
 
@@ -75,7 +116,11 @@ conn.close()
 conn = sqlite3.connect("./restaurant.db")
 cur = conn.cursor()
 
-cur.execute("SELECT * FROM meals WHERE type = 'main' AND price > 1500")
+cur.execute(
+    """
+    SELECT * FROM meals WHERE type = 'main' AND price > 1500
+    """
+)
 
 for row in cur:
     print(row)
@@ -84,69 +129,53 @@ cur.close()
 conn.close()
 
 # %%
-import pandas as pd
-
 conn = sqlite3.connect("./restaurant.db")
-df = pd.read_sql("SELECT * FROM meals WHERE type = 'dessert'", conn)
+
+df = pd.read_sql(
+    """
+    SELECT * FROM meals WHERE type = 'dessert'
+    """,
+    conn,
+)
+
 conn.close()
+
 df
 
 # %%
-import random
-
 conn = sqlite3.connect("./restaurant.db")
-cur = conn.cursor()
 
-cur.execute(
+# Bestellungen mit vegetarischen Gerichten
+df = pd.read_sql(
     """
-    DROP TABLE IF EXISTS orders
-"""
+    SELECT order_date, customer_id, diet as meal_diet FROM orders
+    LEFT JOIN meals ON orders.meal_id = meals.id
+    GROUP BY customer_id
+    HAVING MAX(meal_diet) < 2;
+    """,
+    conn,
 )
 
-cur.execute(
-    """
-    CREATE TABLE IF NOT EXISTS orders
-    (id INTEGER PRIMARY KEY, date TEXT, customer_id INTEGER, meal_id INTEGER)
-"""
-)
-
-
-def insert_random_meal(date, customer_id, meal_ids, cur):
-    meal_id = random.choice(meal_ids)
-    cur.execute(
-        """INSERT INTO orders (customer_id, meal_id, date) VALUES (?, ?, ?)""",
-        (customer_id, meal_id, date),
-    )
-
-
-df_meals = pd.read_sql("SELECT * FROM meals", conn)
-starter_ids = df_meals.query("type == 'starter'").id.tolist()
-main_ids = df_meals.query("type == 'main'").id.tolist()
-dessert_ids = df_meals.query("type == 'dessert'").id.tolist()
-
-n = 100
-dates = (
-    pd.date_range("2024-02-01", "2024-02-29", freq="D").strftime("%Y-%m-%d").tolist()
-)
-customer_id = 0
-
-for date in dates:
-    m = max([50, int(random.normalvariate(mu=n, sigma=n * 0.1))])
-    for i in range(m):
-        has_starter = random.random() > 0.5
-        has_dessert = random.random() > 0.5
-
-        if has_starter:
-            insert_random_meal(date, customer_id, starter_ids, cur)
-
-        insert_random_meal(date, customer_id, main_ids, cur)
-
-        if has_dessert:
-            insert_random_meal(date, customer_id, dessert_ids, cur)
-
-        customer_id += 1
-
-conn.commit()
-
-cur.close()
 conn.close()
+
+df
+
+# %%
+conn = sqlite3.connect("./restaurant.db")
+
+# Bestellungen mit weniger als 3 Gerichten
+df = pd.read_sql(
+    """
+    SELECT order_date, customer_id, SUM(price) as total_price, COUNT(*) as number_of_dishes
+    FROM orders
+    LEFT JOIN meals ON orders.meal_id = meals.id
+    GROUP BY customer_id
+    HAVING COUNT(*) < 3
+    ORDER BY total_price DESC;
+    """,
+    conn,
+)
+
+conn.close()
+
+df
