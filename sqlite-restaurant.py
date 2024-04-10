@@ -18,6 +18,20 @@ import sqlite3
 import random
 import pandas as pd
 
+
+def get_random_meal(meal_type, conn):
+    df = pd.read_sql("SELECT * FROM meals", conn)
+    return random.choice(df.query(f"type == '{meal_type}'").id.tolist())
+
+
+def insert_meal(order_date, customer_id, meal_type, cur, conn):
+    meal_id = get_random_meal(meal_type, conn)
+    cur.execute(
+        """INSERT INTO orders (customer_id, meal_id, order_date) VALUES (?, ?, ?)""",
+        (customer_id, meal_id, order_date),
+    )
+
+
 conn = sqlite3.connect("./restaurant.db")
 cur = conn.cursor()
 
@@ -71,20 +85,6 @@ cur.executemany(
 )
 
 conn.commit()
-
-
-def get_random_meal(meal_type, conn):
-    df = pd.read_sql("SELECT * FROM meals", conn)
-    return random.choice(df.query(f"type == '{meal_type}'").id.tolist())
-
-
-def insert_meal(order_date, customer_id, meal_type, cur, conn):
-    meal_id = get_random_meal(meal_type, conn)
-    cur.execute(
-        """INSERT INTO orders (customer_id, meal_id, order_date) VALUES (?, ?, ?)""",
-        (customer_id, meal_id, order_date),
-    )
-
 
 n = 100
 min_n = 50
