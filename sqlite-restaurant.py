@@ -145,7 +145,7 @@ df
 # %%
 conn = sqlite3.connect("./restaurant.db")
 
-# Bestellungen mit vegetarischen Gerichten
+# Bestellungen mit ausschließlich vegetarischen Gerichten
 df = pd.read_sql(
     """
     SELECT order_date, customer_id, diet as meal_diet FROM orders
