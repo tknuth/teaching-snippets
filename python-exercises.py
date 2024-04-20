@@ -114,3 +114,16 @@ def delta(a, b): ...
 
 delta("d", "h")  # 4
 delta("c", "a")  # -2
+
+
+# %%
+# Schreiben Sie eine Funktion,
+# die das längste Wort in einem Satz ausgibt.
+# Bei mehreren Treffen wird der erste ausgegeben.
+
+
+def longest_word(sentence): ...
+
+
+longest_word("Dies ist ein kurzer Satz.")  # "kurzer"
+longest_word("Dieser Satz ist etwas länger als der vorherige.")  # "vorherige"
