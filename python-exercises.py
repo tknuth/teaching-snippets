@@ -30,7 +30,7 @@ result
 # %%
 # Schreiben Sie eine Funktion,
 # die einen "Slug" generiert,
-# d.h. eine lesbare URL eines Titels.
+# d.h. einen leicht lesbaren Text für eine URL.
 # Nutzen Sie die String-Methoden.
 # https://devdocs.io/python~3.12/library/stdtypes#str
 
