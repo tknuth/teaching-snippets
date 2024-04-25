@@ -29,16 +29,15 @@ result
 
 # %%
 # Schreiben Sie eine Funktion,
-# die einen "Slug" generiert,
-# d.h. einen leicht lesbaren Text für eine URL.
+# die einen Text wie unten beschrieben umwandelt.
 # Nutzen Sie die String-Methoden.
 # https://devdocs.io/python~3.12/library/stdtypes#str
 
 
-def slug(s): ...
+def slugify(s): ...
 
 
-slug("Programmierung mit Python")  # programmierung-mit-python
+slugify("Programmierung mit Python")  # programmierung-mit-python
 
 
 # %%
