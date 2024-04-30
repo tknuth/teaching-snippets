@@ -13,6 +13,7 @@
 #     name: python3
 # ---
 
+
 # %%
 def contains(a, b):
     return a.lower() in b.lower()
@@ -23,40 +24,60 @@ def mask_letter(c, skip, mask):
 
 
 def mask_sentence(sentence, skip, mask):
-    return ''.join([mask_letter(c, skip, mask) for c in sentence])
+    return "".join([mask_letter(c, skip, mask) for c in sentence])
+
+
+def handle_intro(max_mistakes, mistakes, masked):
+    print(f"Du hast noch {max_mistakes - mistakes} Fehler frei.")
+    print()
+    print(masked)
+
+
+def handle_guess(sentence):
+    guess = input("Gib einen Buchstaben ein: ").strip()
+    if contains(guess, sentence):
+        print(f"Ja, ein {guess} existiert.")
+        return guess, 0
+    else:
+        print(f"Nein, ein {guess} existiert nicht.")
+        return guess, 1
+
+
+def handle_failure(mistakes, max_mistakes):
+    if mistakes > max_mistakes:
+        print("Schade, du konntest den Satz nicht erraten.")
+        return True
+    return False
+
+
+def handle_success(mask, masked):
+    if not mask in masked:
+        print("Glückwunsch, du hast gewonnen!")
+        return True
+    return False
 
 
 def play(sentence, max_mistakes=3, mask="#"):
     guesses = ""
     mistakes = 0
-    masked = mask_sentence(sentence, "", mask)
+    masked = mask_sentence(sentence, guesses, mask)
     print("Willkommen zum Wörterraten!")
 
     while True:
-        print(f"Du hast noch {max_mistakes - mistakes} Fehler frei.")
-        print()
-        print(masked)
-        
-        guess = input("Gib einen Buchstaben ein: ").strip()
+        handle_intro(max_mistakes, mistakes, masked)
+        guess, penalty = handle_guess(sentence)
+
         guesses += guess
+        mistakes += penalty
         masked = mask_sentence(sentence, guesses, mask)
 
-        if contains(guess, sentence):
-            print(f"Ja, ein {guess} existiert.")
-        else:
-            print(f"Nein, ein {guess} existiert nicht.")
-            mistakes += 1
-        
-        if mistakes > max_mistakes:
-            print("Schade, du konntest den Satz nicht erraten.")
-            break
-            
-        if not mask in masked:
-            print("Glückwunsch, du hast gewonnen!")
+        if handle_failure(mistakes, max_mistakes) or handle_success(mask, masked):
             break
 
     print()
     print("Der Satz war: " + sentence)
 
+
+# %%
 sentence = "Wir lernen Python, das macht Spaß!"
 play(sentence)
