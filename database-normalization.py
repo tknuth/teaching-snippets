@@ -110,7 +110,8 @@ inventories
 
 # %%
 # 2. NF verletzt
-# Spalte `player_level` hängt funktional nicht vom kompletten Primärschlüssel ab, sondern nur von `player_name`.
+# Der Primärschlüssel ist `player_name` und `item_name`, aber
+# die Spalte `player_level` hängt funktional nur von `player_name` ab.
 # Es können Inkonsistenzen beim Löschen oder Ändern entstehen.
 
 df = pd.DataFrame(
