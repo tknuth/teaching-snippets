@@ -42,14 +42,14 @@ cur.execute(
     """
     CREATE TABLE IF NOT EXISTS meals
     (id INTEGER PRIMARY KEY, name TEXT, type TEXT, diet INTEGER, price INTEGER)
-"""
+    """
 )
 
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS orders
     (id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, meal_id INTEGER)
-"""
+    """
 )
 
 meals = [
