@@ -251,38 +251,6 @@ pd.DataFrame(
     }
 )
 
-# %%
-
-clothes = pd.DataFrame(
-    {
-        "item_name": [
-            "Helm",
-            "Hut",
-            "Handschuhe",
-            "Hemd",
-            "Schuhe",
-            "Schuhe",
-        ],
-        "item_color": [
-            "silbern",
-            "braun",
-            "schwarz",
-            "weiß",
-            "braun",
-            "schwarz",
-        ],
-        "item_type": [
-            "schwer",
-            "leicht",
-            "leicht",
-            "leicht",
-            "mittel",
-            "schwer",
-        ],
-    }
-)
-
-clothes
 
 # %%
 # 5. NF verletzt
@@ -328,6 +296,82 @@ compatible_items = pd.DataFrame(
 )
 
 compatible_items
+
+# %%
+# 5. NF erfüllt
+# Die Regeln werden explizit als separate Tabellen gespeichert.
+
+clothes = pd.DataFrame(
+    {
+        "item_name": [
+            "Helm",
+            "Hut",
+            "Handschuhe",
+            "Hemd",
+            "Schuhe",
+            "Schuhe",
+        ],
+        "item_color": [
+            "silbern",
+            "braun",
+            "schwarz",
+            "weiß",
+            "braun",
+            "schwarz",
+        ],
+        "item_type": [
+            "schwer",
+            "leicht",
+            "leicht",
+            "leicht",
+            "mittel",
+            "schwer",
+        ],
+    }
+)
+
+clothes
+
+# %%
+
+color_preferences = pd.DataFrame(
+    {
+        "player_name": [
+            "Borin",
+            "Borin",
+            "Aragon",
+            "Aragon",
+        ],
+        "item_color": [
+            "silbern",
+            "schwarz",
+            "weiß",
+            "braun",
+        ],
+    }
+)
+
+color_preferences
+
+# %%
+type_preferences = pd.DataFrame(
+    {
+        "player_name": [
+            "Borin",
+            "Borin",
+            "Aragon",
+            "Aragon",
+        ],
+        "item_type": [
+            "mittel",
+            "schwer",
+            "leicht",
+            "mittel",
+        ],
+    }
+)
+
+type_preferences
 
 # %%
 # Nichtrelationales Schema
