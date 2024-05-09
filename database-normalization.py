@@ -252,8 +252,6 @@ pd.DataFrame(
 )
 
 # %%
-# 5. NF verletzt
-# Inkonsistenzen entstehen durch implizite Regeln.
 
 clothes = pd.DataFrame(
     {
@@ -287,8 +285,14 @@ clothes = pd.DataFrame(
 clothes
 
 # %%
+# 5. NF verletzt
+# Inkonsistenzen entstehen durch implizite Regeln.
 # Borin bevorzugt silberne/schwarze mittlere bis schwere Rüstung.
 # Aragon bevorzugt braune/weiße leichte bis mittlere Rüstung.
+# Fehler können beispielsweise entstehen, wenn neue Ausrüstung hinzugefügt wird.
+# Dann müsste die Liste der kompatiblen Gegenstände anhand der Regeln aktualisiert werden.
+# Würde beispielsweise ein mittelschwerer brauner Hut hinzugefügt,
+# müsste dieser bei Aragon, nicht aber für Borin eingetragen werden.
 
 compatible_items = pd.DataFrame(
     {
