@@ -1,0 +1,15 @@
+outlook,temperature,humidity,wind_kmh,play_tennis
+sunny,33,high,7,no
+sunny,31,high,40,no
+overcast,24,high,9,yes
+rain,17,high,5,yes
+rain,10,normal,0,yes
+rain,7,normal,30,no
+overcast,11,normal,35,yes
+sunny,15,high,14,no
+sunny,8,normal,13,yes
+rain,14,normal,15,yes
+sunny,13,normal,28,yes
+overcast,17,high,40,yes
+overcast,27,normal,5,yes
+rain,17,high,41,no
